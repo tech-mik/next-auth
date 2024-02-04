@@ -8,7 +8,11 @@ export const publicRoutes: string[] = ['/']
  * An array of routes that require authentication.
  * These routes can only be accessed by authenticated users.
  */
-export const authRoutes: string[] = ['/auth/login', '/auth/register']
+export const authRoutes: string[] = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/error',
+]
 
 /**
  * The prefix for API authentication routes.
