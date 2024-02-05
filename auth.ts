@@ -10,6 +10,7 @@ import { UserRole } from '@prisma/client'
 declare module 'next-auth' {
   interface User {
     role?: UserRole
+    emailVerified?: Date
   }
 }
 
@@ -32,7 +33,17 @@ export const {
     },
   },
   callbacks: {
-    // TODO: Fix Typescript error hieronder
+    async signIn({ user, account }) {
+      if (account?.provider !== 'credentials') return true
+
+      // Prevent sign-in without email verification
+      if (!user.emailVerified) return false
+
+      // TODO: Add 2FA check
+
+      return true
+    },
+    // FIXME: Fix Typescript error hieronder
     // @ts-ignore
     async session({ session, token }) {
       if (token.sub && session.user) session.user.id = token.sub
