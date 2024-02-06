@@ -19,7 +19,7 @@ import { FormError } from '../form-error'
 import { RegisterType, RegisterSchema } from '@/schemas'
 import { register } from '@/actions/register'
 import { FormSuccess } from '../form-success'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>('')
@@ -36,6 +36,10 @@ export const RegisterForm = () => {
       name: '',
     },
   })
+
+  useEffect(() => {
+    form.setFocus('email')
+  }, [form])
 
   const onSubmit = (values: RegisterType) => {
     setError('')

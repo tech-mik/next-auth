@@ -1,6 +1,6 @@
 'use server'
 
-import { generateResetToken } from '@/data/tokens'
+import { generateResetToken } from '@/lib/tokens'
 import { getUserByEmail } from '@/data/user'
 import { sendResetEmail } from '@/lib/mail'
 import { ResetSchema, ResetType } from '@/schemas'
