@@ -40,8 +40,8 @@ export const LoginForm = () => {
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       // Omdat je de type hebt geinfered hierboven, heb je hieronder autocomplete
-      email: '',
-      password: '',
+      email: 'miktenholt@gmail.com',
+      password: '123456',
       code: '',
     },
   })
