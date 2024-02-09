@@ -1,5 +1,11 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useSession } from 'next-auth/react'
+import { useState, useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
 import { settings } from '@/actions/settings'
 import { FormError } from '@/components/form-error'
 import { FormSuccess } from '@/components/form-success'
@@ -25,42 +31,29 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { useCurrentUser } from '@/hooks/user-current-user'
 import { SettingsSchema } from '@/schemas'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { UserRole } from '@prisma/client'
-import { useSession } from 'next-auth/react'
-import { useState, useTransition } from 'react'
-import { useForm } from 'react-hook-form'
-
-import { z } from 'zod'
 
 const SettingsPage = () => {
   const user = useCurrentUser()
 
-  // Convert role Enum to object
-  const roles = Object.keys(UserRole)
-
   const [error, setError] = useState<string | undefined>()
   const [success, setSuccess] = useState<string | undefined>()
-
   const { update } = useSession()
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: user?.name || undefined,
-      email: user?.email || undefined,
       password: undefined,
       newPassword: undefined,
+      name: user?.name || undefined,
+      email: user?.email || undefined,
       role: user?.role || undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled || false,
+      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
     },
   })
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
-    setError('')
-    setSuccess('')
-
     startTransition(() => {
       settings(values)
         .then((data) => {
@@ -71,20 +64,16 @@ const SettingsPage = () => {
           if (data.success) {
             update()
             setSuccess(data.success)
-            form.setValue('password', '')
-            form.setValue('newPassword', '')
           }
         })
-        .catch((e) => {
-          setError('Something went wrong')
-        })
+        .catch(() => setError('Something went wrong!'))
     })
   }
 
   return (
     <Card className='w-[600px]'>
-      <CardHeader className='text-2xl font-semibold text-center'>
-        <p>⚙️ Settings</p>
+      <CardHeader>
+        <p className='text-2xl font-semibold text-center'>⚙️ Settings</p>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -118,8 +107,8 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
+                            placeholder='john.doe@example.com'
                             type='email'
-                            placeholder='johndoe@example.com'
                             disabled={isPending}
                           />
                         </FormControl>
@@ -132,12 +121,12 @@ const SettingsPage = () => {
                     name='password'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Current Password</FormLabel>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            type='password'
                             placeholder='******'
+                            type='password'
                             disabled={isPending}
                           />
                         </FormControl>
@@ -154,8 +143,8 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            type='password'
                             placeholder='******'
+                            type='password'
                             disabled={isPending}
                           />
                         </FormControl>
@@ -181,13 +170,8 @@ const SettingsPage = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {roles.map((role) => {
-                          return (
-                            <SelectItem key={role} value={role}>
-                              {role}
-                            </SelectItem>
-                          )
-                        })}
+                        <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                        <SelectItem value={UserRole.USER}>User</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -200,10 +184,10 @@ const SettingsPage = () => {
                   name='isTwoFactorEnabled'
                   render={({ field }) => (
                     <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
-                      <div className='space-y- 5'>
-                        <FormLabel>Two Factor Authentication </FormLabel>
+                      <div className='space-y-0.5'>
+                        <FormLabel>Two Factor Authentication</FormLabel>
                         <FormDescription>
-                          Enable two factor authentication for your account.
+                          Enable two factor authentication for your account
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -213,7 +197,6 @@ const SettingsPage = () => {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      {field.value}
                     </FormItem>
                   )}
                 />
@@ -221,7 +204,7 @@ const SettingsPage = () => {
             </div>
             <FormError message={error} />
             <FormSuccess message={success} />
-            <Button type='submit' disabled={isPending}>
+            <Button disabled={isPending} type='submit'>
               Save
             </Button>
           </form>
@@ -230,4 +213,5 @@ const SettingsPage = () => {
     </Card>
   )
 }
+
 export default SettingsPage

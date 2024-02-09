@@ -4,7 +4,6 @@ import { generateResetToken } from '@/lib/tokens'
 import { getUserByEmail } from '@/data/user'
 import { sendResetEmail } from '@/lib/mail'
 import { ResetSchema, ResetType } from '@/schemas'
-import { Resend } from 'resend'
 
 export const reset = async (values: ResetType) => {
   const validatedFields = ResetSchema.safeParse(values)

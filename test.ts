@@ -17,18 +17,22 @@ import {
 import { Input } from '@/components/ui/input'
 import {
   Select,
-  SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useCurrentUser } from '@/hooks/user-current-user'
 import { SettingsSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserRole } from '@prisma/client'
+import Email from 'next-auth/providers/email'
 import { useSession } from 'next-auth/react'
+import error from 'next/error'
+import { type } from 'os'
 import { useState, useTransition } from 'react'
+import { render } from 'react-dom'
 import { useForm } from 'react-hook-form'
 
 import { z } from 'zod'
@@ -62,6 +66,13 @@ const SettingsPage = () => {
     setSuccess('')
 
     startTransition(() => {
+      if (values.email === user?.email) values.email = undefined
+      if (values.name === user?.name) values.name = undefined
+      if (values.password === '') values.password = undefined
+      if (values.newPassword === '') values.newPassword = undefined
+      if (values.isTwoFactorEnabled === user?.isTwoFactorEnabled)
+        values.isTwoFactorEnabled = undefined
+
       settings(values)
         .then((data) => {
           if (data.error) {
@@ -71,8 +82,7 @@ const SettingsPage = () => {
           if (data.success) {
             update()
             setSuccess(data.success)
-            form.setValue('password', '')
-            form.setValue('newPassword', '')
+            form.reset({ password: '', newPassword: '' })
           }
         })
         .catch((e) => {

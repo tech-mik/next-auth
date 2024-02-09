@@ -13,10 +13,10 @@ export const newVerification = async (token: string) => {
   if (hasExpired) return { error: 'Token has expired' }
 
   const existingUser = await getUserByEmail(existingToken.email)
-  if (!existingUser) return { error: 'Email does not exist' }
+  if (existingUser) return { error: 'Email already exists' }
 
   await db.user.update({
-    where: { id: existingUser.id },
+    where: { id: existingToken.id },
     data: { emailVerified: new Date(), email: existingToken.email },
   })
 
