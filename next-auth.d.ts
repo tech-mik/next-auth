@@ -6,5 +6,10 @@ declare module 'next-auth' {
     role?: UserRole
     emailVerified?: Date
     isTwoFactorEnabled?: boolean
+    isOAuth?: boolean
+  }
+
+  export interface Session {
+    user?: User
   }
 }
