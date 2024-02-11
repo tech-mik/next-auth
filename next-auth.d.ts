@@ -4,7 +4,7 @@ import { UserRole } from '@prisma/client'
 declare module 'next-auth' {
   export interface User {
     role?: UserRole
-    emailVerified?: Date
+    emailVerified?: Date | null
     isTwoFactorEnabled?: boolean
     isOAuth?: boolean
   }
