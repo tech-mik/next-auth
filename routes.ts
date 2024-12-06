@@ -20,10 +20,10 @@ export const authRoutes: string[] = [
  * The prefix for API authentication routes.
  * Routes that start with this prefix are used for API authentication purposes.
  */
-export const apiAuthPrefix: string = '/api/auth'
+export const apiAuthPrefix = '/api/auth'
 
 /**
  * Default redirect path after logging in.
  */
 
-export const DEFAULT_LOGIN_REDIRECT: string = '/settings'
+export const DEFAULT_LOGIN_REDIRECT = '/settings'

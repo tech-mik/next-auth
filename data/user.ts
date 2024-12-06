@@ -1,5 +1,4 @@
 import { db } from '@/lib/db'
-import { User } from '@prisma/client'
 
 export const getUserByEmail = async (email: string) => {
   try {

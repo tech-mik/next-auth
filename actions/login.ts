@@ -7,7 +7,6 @@ import { sendTwoFactorTokenEmail, sendVerificationEmail } from '@/lib/mail'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { LoginSchema, LoginType } from '@/schemas'
 import { AuthError } from 'next-auth'
-import { redirect } from 'next/navigation'
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation'
 import { db } from '@/lib/db'
 import { getTwoFactorTokenByEmail } from '@/data/two-factor-token'
@@ -32,7 +31,7 @@ export const login = async (values: LoginType) => {
       verificationToken.email,
       verificationToken.token,
     )
-    if (error) return { error: 'Something went wrong' }
+    if (error) return { error: 'Something went wrong with sending the mail' }
 
     return { success: 'Confirmation email sent!' }
   }
