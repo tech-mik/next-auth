@@ -83,7 +83,7 @@ const SettingsPage = () => {
 
   return (
     <Card className='w-[600px]'>
-      <CardHeader className='text-2xl font-semibold text-center'>
+      <CardHeader className='font-semibold text-2xl text-center'>
         <p>⚙️ Settings</p>
       </CardHeader>
       <CardContent>
@@ -120,7 +120,7 @@ const SettingsPage = () => {
                             {...field}
                             type='email'
                             placeholder='johndoe@example.com'
-                            disabled={isPending}
+                            disabled
                           />
                         </FormControl>
                         <FormMessage />
@@ -199,7 +199,7 @@ const SettingsPage = () => {
                   control={form.control}
                   name='isTwoFactorEnabled'
                   render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
+                    <FormItem className='flex flex-row justify-between items-center shadow-sm p-3 border rounded-lg'>
                       <div className='space-y- 5'>
                         <FormLabel>Two Factor Authentication </FormLabel>
                         <FormDescription>
