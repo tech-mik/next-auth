@@ -33,7 +33,10 @@ export const register = async (values: RegisterType) => {
       verificationToken.email,
       verificationToken.token,
     )
-    if (error) return { error: 'Something went wrong' }
+    if (error) {
+      console.log(error)
+      return { error: 'Something went wrong' }
+    }
 
     return { success: 'Confirmation email sent!' }
   } catch (error) {
