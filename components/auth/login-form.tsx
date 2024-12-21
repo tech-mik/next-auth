@@ -35,13 +35,15 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState<string | undefined>('')
   const [isPending, startTransition] = useTransition()
 
+  const testParam = searchParams.get('testing')
+
   // Koppel Schema Type aan het formulier
   const form = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       // Omdat je de type hebt geinfered hierboven, heb je hieronder autocomplete
-      email: 'mail@example.com',
-      password: '123456',
+      email: testParam === 'true' ? 'mail@example.com' : '',
+      password: testParam === 'true' ? '123456' : '',
       code: '',
     },
   })
